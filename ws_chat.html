@@ -1,0 +1,48 @@
+<html>
+<body>
+
+<div>
+    <form>
+        <label for="textfield">Text</label>
+        <input type="text" id="textfield" placeholder="input"/><br/>
+        <button type="button" id="sendBtn">Send</button>
+    </form>
+</div>
+<div id="container"></div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var ws;
+
+        if (window.WebSocket === undefined) {
+            $("#container").append("Your browser does not support WebSockets");
+            return;
+        } else {
+            ws = initWS();
+        }
+
+        function initWS() {
+            var socket = new WebSocket("ws://127.0.0.1:8080/ws/chat?key=123456"),
+                container = $("#container")
+            socket.onopen = function () {
+                container.append("<p>Socket open</p>");
+            };
+            socket.onmessage = function (e) {
+                container.append("<p> Got :" + e.data + "</p>");
+            }
+            socket.onclose = function () {
+                container.append("<p>Socket closed</p>");
+            }
+
+            return socket;
+        }
+
+        $("#sendBtn").click(function (e) {
+            e.preventDefault();
+            ws.send(JSON.stringify({Num: $("#textfield").val()}));
+        });
+    });
+</script>
+</body>
+</html>

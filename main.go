@@ -33,6 +33,9 @@ func WsChat(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		fmt.Println(fmt.Sprintf("WsChart receive message: %s", string(b)))
-		ws.WriteTextMessage(b)
+		err = ws.WriteTextMessage(b)
+		if err != nil {
+			return
+		}
 	}
 }
